@@ -1,0 +1,36 @@
+{
+  "name": "delance_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Aidar912",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aidar912/backend-delance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Aidar912/backend-delance/issues"
+  },
+  "homepage": "https://github.com/Aidar912/backend-delance#readme",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "ethers": "^6.11.1",
+    "express": "^4.18.2",
+    "mongoose": "^8.2.0",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.1",
+    "web3": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
