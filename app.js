@@ -2,6 +2,8 @@ const express = require('express');
 const sequelize = require('./src/db/db');
 const routes = require('./src/routes/index');
 const cors = require('cors');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 
 const app = express();
@@ -21,6 +23,20 @@ const corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200
 };
+
+const options = {
+    swaggerDefinition: {
+        info: {
+            title: 'API',
+            version: '1.0.0',
+            description: 'API для Коли',
+        },
+    },
+    apis: ['./src/routes/*.js']
+};
+const specs = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use(cors(corsOptions));
 app.use(express.json());
