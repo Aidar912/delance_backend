@@ -29,7 +29,11 @@ exports.updateUser = async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);
         if (user) {
-            await user.update(req.body);
+            const updateData = req.body;
+
+            if (req.file) {
+                updateData.profilePhoto = `/uploads/${req.file.filename}`; }
+            await user.update(updateData);
             res.status(200).json(user);
         } else {
             res.status(404).json({ message: 'User not found' });

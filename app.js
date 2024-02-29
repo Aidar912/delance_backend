@@ -4,7 +4,7 @@ const routes = require('./src/routes/index');
 const cors = require('cors');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-
+const bodyParser = require('body-parser');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,8 +36,10 @@ const options = {
 };
 const specs = swaggerJsdoc(options);
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
+app.use('/uploads', express.static('uploads'));
 app.use(cors(corsOptions));
 app.use(express.json());
 

@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db/db');
-const Order = require('./orderModel');
 
 const File = sequelize.define('File', {
     name: {
@@ -18,8 +17,5 @@ const File = sequelize.define('File', {
 }, {
 });
 
-// Связь
-File.belongsTo(Order);
-Order.hasMany(File);
 
 module.exports = File;

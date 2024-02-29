@@ -1,11 +1,63 @@
-const { Order } = require('../models/orderModel');
+const Order = require('../models/orderModel');
+const File = require('../models/fileModel');
+const fs = require('fs');
+const util = require('util');
+const sequelize = require("../db/db");
+const unlinkAsync = util.promisify(fs.unlink);
 
-// Create a new order
-async function createOrder(req, res) {
+async function createOrder (req, res){
+    let transaction;
     try {
-        const order = await Order.create(req.body);
+        transaction = await sequelize.transaction();
+
+        const order = await Order.create(req.body, { transaction });
+
+        if (req.files && req.files.length > 0) {
+            const files = req.files.map(file => ({
+                name: file.originalname,
+                path: file.path,
+                type: file.mimetype,
+                orderId: order.id
+            }));
+            await File.bulkCreate(files, { transaction });
+        }
+
+        await transaction.commit();
         res.status(201).send(order);
     } catch (error) {
+        if (transaction) await transaction.rollback();
+        res.status(400).send(error);
+    }
+}
+
+// Контроллер для обновления заказа
+async function updateOrder (req, res) {
+    let transaction;
+    try {
+        transaction = await sequelize.transaction();
+
+        const order = await Order.findByPk(req.params.id, {transaction});
+        if (!order) {
+            await transaction.rollback();
+            return res.status(404).send('Order not found');
+        }
+
+        await order.update(req.body, {transaction});
+
+        if (req.files && req.files.length > 0) {
+            const files = req.files.map(file => ({
+                name: file.originalname,
+                path: file.path,
+                type: file.mimetype,
+                orderId: order.id
+            }));
+            await File.bulkCreate(files, {transaction});
+        }
+
+        await transaction.commit();
+        res.status(200).send(order);
+    } catch (error) {
+        if (transaction) await transaction.rollback();
         res.status(400).send(error);
     }
 }
@@ -13,61 +65,69 @@ async function createOrder(req, res) {
 // Get all orders
 async function getAllOrders(req, res) {
     try {
-        const orders = await Order.findAll();
+        const orders = await Order.findAll({
+            include: [{
+                model:File,
+                as:'files'
+            }]
+        });
         res.status(200).send(orders);
     } catch (error) {
         res.status(400).send(error);
     }
 }
 
+
 // Get a single order by ID
 async function getOrderById(req, res) {
     try {
-        const order = await Order.findByPk(req.params.id);
+        const order = await Order.findByPk(req.params.id, {
+            include: [File]
+        });
         if (order) {
             res.status(200).send(order);
         } else {
-            res.status(404).send({message: 'Order not found'});
+            res.status(404).send({ message: 'Order not found' });
         }
     } catch (error) {
         res.status(400).send(error);
     }
 }
 
-// Update an order
-async function updateOrder(req, res) {
-    try {
-        const order = await Order.findByPk(req.params.id);
-        if (order) {
-            await order.update(req.body);
-            res.status(200).send(order);
-        } else {
-            res.status(404).send({message: 'Order not found'});
-        }
-    } catch (error) {
-        res.status(400).send(error);
-    }
-}
+
 
 // Delete an order
 async function deleteOrder(req, res) {
     try {
-        const order = await Order.findByPk(req.params.id);
+        const order = await Order.findByPk(req.params.id, {
+            include: [File]
+        });
         if (order) {
+            if (order.Files && order.Files.length > 0) {
+                for (const file of order.Files) {
+                    try {
+                        await unlinkAsync(file.path);
+                        await file.destroy();
+                    } catch (fsError) {
+                        console.error(`Error deleting file ${file.path}: ${fsError}`);
+                    }
+                }
+            }
             await order.destroy();
-            res.status(204).send({message: 'Order deleted'});
+            res.status(204).send({ message: 'Order and associated files deleted' });
         } else {
-            res.status(404).send({message: 'Order not found'});
+            res.status(404).send({ message: 'Order not found' });
         }
     } catch (error) {
         res.status(400).send(error);
     }
 }
 
+
 module.exports = {
     createOrder,
+    updateOrder,
     getAllOrders,
     getOrderById,
-    updateOrder,
     deleteOrder
 };

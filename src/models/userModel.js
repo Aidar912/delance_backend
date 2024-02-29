@@ -7,6 +7,10 @@ const User = sequelize.define('User', {
         allowNull: false,
         unique: true
     },
+    profilePhotoUrl: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     firstName: {
         type: DataTypes.STRING,
         allowNull: true
@@ -22,9 +26,13 @@ const User = sequelize.define('User', {
         validate: {
             isEmail: true
         }
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+
     }
 }, {
-    // Other model options go here
 });
 
 module.exports = User;
