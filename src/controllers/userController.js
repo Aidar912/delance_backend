@@ -24,8 +24,6 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-// Обновить пользователя
-// Этот код должен быть в файле, например, userController.js
 
 exports.updateUser = async (req, res) => {
     try {
@@ -44,5 +42,47 @@ exports.updateUser = async (req, res) => {
         }
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+};
+
+
+exports.getLastOnline = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.userId);
+        if (user) {
+            const now = new Date();
+            const lastOnline = new Date(user.lastOnline);
+            const minutesAgo = Math.round(((now - lastOnline) / 1000) / 60);
+            res.json({ userId: user.id, minutesAgo });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+
+
+
+exports.getAllUsersLastOnline = async (req, res) => {
+    try {
+        const users = await User.findAll();
+        const now = new Date();
+
+        const usersLastOnline = users.map(user => {
+            const lastOnline = new Date(user.lastOnline);
+            const minutesAgo = Math.round(((now - lastOnline) / 1000) / 60);
+            return {
+                userId: user.id,
+                minutesAgo: minutesAgo
+            };
+        });
+
+        res.json(usersLastOnline);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error', error });
     }
 };

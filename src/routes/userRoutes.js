@@ -60,5 +60,7 @@ const upload = require('../config/multer');
 router.get('/', userController.getAllUsers);
 router.get('/:id', userController.getUserById);
 router.put('/:id', upload.single('profilePhoto'), userController.updateUser);
+router.get('/users/lastOnline', userController.getAllUsersLastOnline);
+router.get('/users/:userId/lastOnline', userController.getLastOnline);
 
 module.exports = router;

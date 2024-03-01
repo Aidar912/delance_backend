@@ -17,13 +17,11 @@ exports.verifySignature = async (req, res) => {
             user.lastOnline = new Date();
             await user.save();
         }
-        const now = new Date();
-        const lastOnline = new Date(user.lastOnline);
-        const minutesAgo = Math.round(((now - lastOnline) / 1000) / 60);
 
-        res.json({ "verify": true, minutesAgo});
+        res.json({ "verify": true});
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
