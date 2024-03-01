@@ -14,7 +14,7 @@ exports.createPurchase = async (req, res) => {
             totalPrice,
             quantity,
             transactionId,
-            purchaseDate: new Date() // Автоматически устанавливаем текущую дату
+            purchaseDate: new Date()
         });
 
         res.status(201).json(newPurchase);
