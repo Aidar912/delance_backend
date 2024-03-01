@@ -1,5 +1,5 @@
 // controllers/purchaseController.js
-const { Purchase } = require('../models/ServicePurchaseModel');
+const Purchase = require('../models/ServicePurchaseModel');
 
 // Создание новой покупки
 function createPurchase(req, res) {

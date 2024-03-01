@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   name: Orders
- *   description: Операции с заказами(Не работает)
+ *   description: Операции с заказами(работает)
  * /api/orders:
  *   post:
  *     summary: Создать заказ

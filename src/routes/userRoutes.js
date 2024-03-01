@@ -31,7 +31,7 @@
  *         description: Ошибка сервера
  *   put:
  *     summary: Обновить пользователя
- *     description: id пользователя указывается в url , обновляет email,firstName,lastName
+ *     description: id пользователя указывается в url , обновляет email,firstName,lastName,description,active,profilePhotoUrl(file)
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -49,6 +49,46 @@
  *       500:
  *         description: Ошибка сервера
  */
+
+
+/**
+ * @swagger
+ * /api/users/lastOnline/:
+ *   get:
+ *     summary: Получить минуты  для всех пользователей
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Успешный ответ
+ *       404:
+ *         description: Заказ не найден
+ *       500:
+ *         description: Ошибка сервера
+ * /api/users/{id}/lastOnline/:
+ *   get:
+ *     summary: Получить минуты  для пользователя
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Успешный ответ
+ *       404:
+ *         description: Заказ не найден
+ *       500:
+ *         description: Ошибка сервера
+ */
+
 
 
 
