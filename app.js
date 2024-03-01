@@ -6,7 +6,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 const IP_ADDRESS = '127.0.0.1';
 sequelize.authenticate()
     .then(() => {
