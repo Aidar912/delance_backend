@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const IP_ADDRESS = '127.0.0.1';
 sequelize.authenticate()
     .then(() => {
         return sequelize.sync();
@@ -45,6 +46,6 @@ app.use(express.json());
 
 routes(app)
 
-app.listen(PORT, () => {
+app.listen(PORT, IP_ADDRESS,() => {
     console.log(`Server running on ${PORT}`);
 });
