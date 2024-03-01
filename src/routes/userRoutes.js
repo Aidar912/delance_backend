@@ -55,10 +55,10 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-
+const upload = require('../config/multer');
 
 router.get('/', userController.getAllUsers);
 router.get('/:id', userController.getUserById);
-router.put('/:id', userController.updateUser);
+router.put('/:id', upload.single('profilePhoto'), userController.updateUser);
 
 module.exports = router;

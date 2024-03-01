@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/ordersController');
-const upload = require('../config/multer');
+const serviceController = require('../controllers/serviceController');
 
-// Routes
-router.post('/', upload.array('files'), orderController.createOrder);
-router.put('/:id', upload.array('files'), orderController.updateOrder);
-router.get('/', orderController.getAllOrders);
-router.get('/:id', orderController.getOrderById);
-router.put('/:id', orderController.updateOrder);
-router.delete('/:id', orderController.deleteOrder);
+router.post('/',serviceController.createService);
+router.get('/', serviceController.getAllServices);
+router.get('/:id', serviceController.getServiceById);
+router.put('/:id', serviceController.updateService);
+router.delete('/:id', serviceController.deleteService);
 
 module.exports = router;

@@ -11,10 +11,17 @@ exports.verifySignature = async (req, res) => {
         }
         let user = await User.findOne({ address });
         if (!user) {
-            user = new User({ address });
+            user = await User.create({ address, lastOnline: new Date() });
+            await user.save();
+        } else {
+            user.lastOnline = new Date();
             await user.save();
         }
-        res.json({ userData: 'User verified', user });
+        const now = new Date();
+        const lastOnline = new Date(user.lastOnline);
+        const minutesAgo = Math.round(((now - lastOnline) / 1000) / 60);
+
+        res.json({ "verify": true, minutesAgo});
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Server error', error });

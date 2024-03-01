@@ -31,7 +31,16 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: true
 
-    }
+    },
+    description:{
+        type:DataTypes.TEXT,
+        allowNull:true
+    },
+    lastOnline: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: DataTypes.NOW
+    },
 }, {
 });
 

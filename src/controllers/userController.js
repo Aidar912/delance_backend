@@ -25,6 +25,8 @@ exports.getUserById = async (req, res) => {
 };
 
 // Обновить пользователя
+// Этот код должен быть в файле, например, userController.js
+
 exports.updateUser = async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);
@@ -32,7 +34,9 @@ exports.updateUser = async (req, res) => {
             const updateData = req.body;
 
             if (req.file) {
-                updateData.profilePhoto = `/uploads/${req.file.filename}`; }
+                updateData.profilePhotoUrl = `/uploads/${req.file.filename}`;
+            }
+
             await user.update(updateData);
             res.status(200).json(user);
         } else {

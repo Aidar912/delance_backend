@@ -13,8 +13,12 @@ const Service = sequelize.define('Service', {
         type: DataTypes.TEXT,
         allowNull: false
     },
-    price: {
-        type: DataTypes.DECIMAL(10, 2),
+    minprice: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    maxprice: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     duration: {

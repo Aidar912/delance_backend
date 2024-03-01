@@ -14,7 +14,7 @@ const Purchase = sequelize.define('Purchase', {
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'pending', // Примеры значений: 'pending', 'paid', 'completed', 'cancelled'
+        defaultValue: 'pending',
         validate: {
             isIn: {
                 args: [['pending', 'paid', 'completed', 'cancelled']],

@@ -27,8 +27,8 @@ const Order = sequelize.define('Order', {
 });
 
 // Связи
-Order.belongsTo(User, {as: 'client', foreignKey: 'clientId'}); // Заказчик
-Order.belongsTo(User, {as: 'executor', foreignKey: 'executorId'}); // Исполнитель
+Order.belongsTo(User, {as: 'client', foreignKey: 'clientId'});
+Order.belongsTo(User, {as: 'executor', foreignKey: 'executorId'});
 User.hasMany(Order, {as: 'clientOrders', foreignKey: 'clientId'});
 User.hasMany(Order, {as: 'executorOrders', foreignKey: 'executorId'});
 Order.belongsTo(Category, { foreignKey: 'categoryId', as: 'category' });
