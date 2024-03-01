@@ -6,6 +6,7 @@
  * /api/orders:
  *   post:
  *     summary: Создать заказ
+ *     description: title,description,price,status,client,executor,category,files(список)
  *     tags: [Orders]
  *     responses:
  *       200:
