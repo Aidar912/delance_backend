@@ -6,6 +6,7 @@ const offerRoutes = require('./offersRoutes');
 const serviceRoutes = require('./serviceRoutes');
 const purchaseRoutes = require('./purchaseRoutes');
 const reviewRoutes = require('./reviewRoutes');
+const roomRoutes = require('./roomRoutes');
 
 module.exports = (app) => {
     app.use('/api/orders', orderRoutes);
@@ -16,4 +17,5 @@ module.exports = (app) => {
     app.use('/api/services', serviceRoutes);
     app.use('/api/purchase', purchaseRoutes);
     app.use('/api/review', reviewRoutes);
+    app.use('/api/rooms', roomRoutes);
 };

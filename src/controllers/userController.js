@@ -86,3 +86,27 @@ exports.getAllUsersLastOnline = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
+
+// Получить пользователя по адресу
+exports.getUserByAddress = async (req, res) => {
+
+    try {
+        let user = await User.findOne({
+            where: {
+                address: req.params.address
+            }
+        });
+
+        console.log(user)
+
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({message: 'User not found'})
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Server error', error});
+    }
+}

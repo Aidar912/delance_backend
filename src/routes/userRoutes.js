@@ -140,4 +140,27 @@ router.get('/:userId/lastOnline', userController.getLastOnline);
 router.get('/:userId/average-rating', reviewController.getUserAverageRating);
 router.get('/avg/average-ratings', reviewController.getAllUsersAverageRatings);
 
+/**
+ * @swagger
+ * /api/users/address/{address}:
+ *   get:
+ *     summary: Получить пользователя по адресу
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: address
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Успешный ответ
+ *       404:
+ *         description: Пользователь не найден
+ *       400:
+ *         description: Ошибка сервера
+ */
+router.get('/address/:address', userController.getUserByAddress);
+
+
 module.exports = router;
