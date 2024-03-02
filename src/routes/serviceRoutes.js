@@ -7,7 +7,7 @@
  *   post:
  *     summary: Создать услугу
  *     tags: [Service]
- *     description: title , description , minprice(от ),maxprice(до),duration,status,seller(id),category(id),files(список файлов)
+ *     description: title , description , minprice(от ),maxprice(до),duration,status,seller(id),category(id),files(список файлов),serviceImage(фото)
  *     responses:
  *       200:
  *         description: Успешное создание услуги
