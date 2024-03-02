@@ -1,4 +1,7 @@
 const Review  = require('../models/reviewModel');
+const sequelize = require("../db/db");
+const User = require("../models/userModel");
+
 
 function createReview(req, res) {
     Review.create(req.body)
