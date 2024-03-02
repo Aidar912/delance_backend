@@ -1,5 +1,6 @@
 const Offers = require('../models/offersModel');
 const File = require('../models/fileModel');
+const User = require('../models/userModel');
 const fs = require('fs');
 const util = require('util');
 const sequelize = require("../db/db");
@@ -80,7 +81,12 @@ async function getAllOffers(req, res) {
 async function getOffersById(req, res) {
     try {
         const offer = await Offers.findByPk(req.params.id, {
-            include: [File]
+            include: [
+                {
+                    model:File,
+                    as : 'files'
+                }
+            ]
         });
         if (offer) {
             res.status(200).send(offer);
@@ -98,7 +104,12 @@ async function getOffersById(req, res) {
 async function deleteOffers(req, res) {
     try {
         const offer = await Offers.findByPk(req.params.id, {
-            include: [File]
+            include: [
+                {
+                    model:File,
+                    as : 'files'
+                }
+            ]
         });
         if (offer) {
             if (offer.Files && offer.Files.length > 0) {
@@ -128,8 +139,8 @@ async function listOffersForOrder  (req, res)  {
         const offers = await Offers.findAll({
             where: { orderId: orderId },
             include: [
-                { association: Offers.freelance },
-                { association: Offers.files }
+                { model: User, as: 'freelance' },
+                { model: File, as: 'files' }
             ]
         });
 
