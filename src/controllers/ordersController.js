@@ -3,7 +3,7 @@ const File = require('../models/fileModel');
 const fs = require('fs');
 const util = require('util');
 const sequelize = require("../db/db");
-const Service = require("../models/serviceModel");
+const Category = require("../models/CategoryModel");
 const unlinkAsync = util.promisify(fs.unlink);
 
 async function createOrder(req, res) {
@@ -84,7 +84,9 @@ async function getAllOrders(req, res) {
             include: [{
                 model:File,
                 as:'files'
-            }]
+            },{
+                model: Category,
+                as: 'category' }]
         });
         res.status(200).send(orders);
     } catch (error) {
@@ -100,7 +102,9 @@ async function getOrderById(req, res) {
             include: [{
                 model:File,
                 as:'files'
-            }]
+            },{
+                    model: Category,
+                    as: 'category' }]
         });
         if (order) {
             res.status(200).send(order);
