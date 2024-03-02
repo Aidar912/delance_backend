@@ -92,8 +92,9 @@ async function getAllUsersAverageRatings (req, res) {
             }],
             attributes: [
                 'id',
-                [sequelize.fn('AVG', sequelize.col('reviews.rating')), 'averageRating']
+                [sequelize.cast(sequelize.fn('AVG', sequelize.col('reviews.rating')), 'float'), 'averageRating']
             ],
+
             group: ['User.id']
         });
 

@@ -138,6 +138,6 @@ router.put('/:id', upload.single('profilePhoto'), userController.updateUser);
 router.get('/lastOnline', userController.getAllUsersLastOnline);
 router.get('/:userId/lastOnline', userController.getLastOnline);
 router.get('/:userId/average-rating', reviewController.getUserAverageRating);
-router.get('/average-ratings', reviewController.getAllUsersAverageRatings);
+router.get('/avg/average-ratings', reviewController.getAllUsersAverageRatings);
 
 module.exports = router;
