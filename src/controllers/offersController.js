@@ -11,10 +11,11 @@ async function createOffer (req, res){
     try {
         transaction = await sequelize.transaction();
 
-        const order = await Offers.create(req.body, { transaction });
+        const offer = await Offers.create(req.body, { transaction });
 
         if (req.files && req.files.length > 0) {
             const files = req.files.map(file => ({
+                offerId: offer.id,
                 name: file.originalname,
                 path: file.path,
                 type: file.mimetype
@@ -23,7 +24,7 @@ async function createOffer (req, res){
         }
 
         await transaction.commit();
-        res.status(201).send(order);
+        res.status(201).send(offer);
     } catch (error) {
         if (transaction) await transaction.rollback();
         res.status(400).send(error);
@@ -85,6 +86,10 @@ async function getOffersById(req, res) {
                 {
                     model:File,
                     as : 'files'
+                },
+                {
+                    model: User,
+                    as: 'freelanceOffers'
                 }
             ]
         });
