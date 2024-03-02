@@ -9,6 +9,10 @@ const Order = sequelize.define('Order', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    orderImageUrl:{
+    type: DataTypes.STRING,
+        allowNull: true
+    },
     description: {
         type: DataTypes.TEXT,
         allowNull: false

@@ -86,11 +86,12 @@
 const express = require('express');
 const router = express.Router();
 const serviceController = require('../controllers/serviceController');
+const upload = require('../config/multer');
 
-router.post('/',serviceController.createService);
+router.put('/:id', upload.fields([{ name: 'serviceImage', maxCount: 1 }, { name: 'otherFiles' }]), serviceController.updateService);
 router.get('/', serviceController.getAllServices);
 router.get('/:id', serviceController.getServiceById);
-router.put('/:id', serviceController.updateService);
+router.post('/', upload.fields([{ name: 'serviceImage', maxCount: 1 }, { name: 'otherFiles' }]), serviceController.createService);
 router.delete('/:id', serviceController.deleteService);
 
 module.exports = router;

@@ -9,6 +9,10 @@ const Service = sequelize.define('Service', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    serviceImageUrl:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     description: {
         type: DataTypes.TEXT,
         allowNull: false

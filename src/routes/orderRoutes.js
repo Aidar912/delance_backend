@@ -84,11 +84,15 @@ const orderController = require('../controllers/ordersController');
 const upload = require('../config/multer');
 
 // Routes
-router.post('/', upload.array('files'), orderController.createOrder);
-router.put('/:id', upload.array('files'), orderController.updateOrder);
+router.post('/',
+    upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'files', maxCount: 10 }]),
+    orderController.createOrder
+);
 router.get('/', orderController.getAllOrders);
 router.get('/:id', orderController.getOrderById);
-router.put('/:id', orderController.updateOrder);
+
+router.put('/:id', upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'otherFiles' }]), orderController.updateOrder);
+
 router.delete('/:id', orderController.deleteOrder);
 
 module.exports = router;

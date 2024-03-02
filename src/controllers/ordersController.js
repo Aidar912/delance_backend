@@ -3,53 +3,69 @@ const File = require('../models/fileModel');
 const fs = require('fs');
 const util = require('util');
 const sequelize = require("../db/db");
+const Service = require("../models/serviceModel");
 const unlinkAsync = util.promisify(fs.unlink);
 
-async function createOrder (req, res){
+async function createOrder(req, res) {
     let transaction;
     try {
         transaction = await sequelize.transaction();
 
-        const order = await Order.create(req.body, { transaction });
+        const orderData = {
+            ...req.body,
+            orderImageUrl: req.files.orderImage ? req.files.orderImage[0].path : null
+        };
+        const order = await Order.create(orderData, { transaction });
 
-        if (req.files && req.files.length > 0) {
-            const files = req.files.map(file => ({
+        if (req.files.files && req.files.files.length > 0) {
+            const filesData = req.files.files.map(file => ({
+                orderId: order.id, // связываем файлы с только что созданным заказом
                 name: file.originalname,
                 path: file.path,
                 type: file.mimetype
             }));
-            await File.bulkCreate(files, { transaction });
+            await File.bulkCreate(filesData, { transaction });
         }
 
+        // Фиксация транзакции
         await transaction.commit();
-        res.status(201).send(order);
+
+        // Отправка ответа клиенту
+        res.status(201).json(order);
     } catch (error) {
+        // Откат транзакции в случае ошибки
         if (transaction) await transaction.rollback();
-        res.status(400).send(error);
+        console.error('Ошибка при создании заказа:', error);
+        res.status(400).json({ message: 'Ошибка при создании заказа', error: error.message });
     }
 }
 
-// Контроллер для обновления заказа
-async function updateOrder (req, res) {
+async function updateOrder(req, res) {
     let transaction;
     try {
         transaction = await sequelize.transaction();
 
-        const order = await Order.findByPk(req.params.id, {transaction});
+        const order = await Order.findByPk(req.params.id, { transaction });
         if (!order) {
             await transaction.rollback();
             return res.status(404).send('Order not found');
         }
 
-        await order.update(req.body, {transaction});
+        const updateData = {
+            ...req.body,
+            orderImageUrl: req.files && req.files.orderImage ? req.files.orderImage[0].path : order.orderImageUrl
+        };
 
-        if (req.files && req.files.length > 0) {
-            const files = req.files.map(file => ({
+        await order.update(updateData, { transaction });
+
+        if (req.files && req.files.otherFiles && req.files.otherFiles.length > 0) {
+            const files = req.files.otherFiles.map(file => ({
                 name: file.originalname,
                 path: file.path,
-                type: file.mimetype
+                type: file.mimetype,
+                orderId: order.id
             }));
-            await File.bulkCreate(files, {transaction});
+            await File.bulkCreate(files, { transaction });
         }
 
         await transaction.commit();
@@ -59,6 +75,7 @@ async function updateOrder (req, res) {
         res.status(400).send(error);
     }
 }
+
 
 // Get all orders
 async function getAllOrders(req, res) {

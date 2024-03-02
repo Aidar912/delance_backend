@@ -6,24 +6,32 @@ const sequelize = require("../db/db");
 const unlinkAsync = util.promisify(fs.unlink);
 
 
-async function createService (req, res){
+async function createService(req, res) {
     let transaction;
     try {
         transaction = await sequelize.transaction();
 
-        const order = await Service.create(req.body, { transaction });
+        const serviceImageData = req.files.serviceImage ? req.files.serviceImage[0] : null;
 
-        if (req.files && req.files.length > 0) {
-            const files = req.files.map(file => ({
+        const serviceData = {
+            ...req.body,
+            serviceImageUrl: serviceImageData ? serviceImageData.path : null
+        };
+
+        const service = await Service.create(serviceData, { transaction });
+
+        if (req.files.otherFiles && req.files.otherFiles.length > 0) {
+            const files = req.files.otherFiles.map(file => ({
                 name: file.originalname,
                 path: file.path,
-                type: file.mimetype
+                type: file.mimetype,
+                serviceId: service.id
             }));
             await File.bulkCreate(files, { transaction });
         }
 
         await transaction.commit();
-        res.status(201).send(order);
+        res.status(201).send(service);
     } catch (error) {
         if (transaction) await transaction.rollback();
         res.status(400).send(error);
@@ -62,27 +70,32 @@ async function getServiceById(req, res) {
     }
 }
 
-
-async function updateService (req, res) {
+async function updateService(req, res) {
     let transaction;
     try {
         transaction = await sequelize.transaction();
 
-        const service = await Service.findByPk(req.params.id, {transaction});
+        const service = await Service.findByPk(req.params.id, { transaction });
         if (!service) {
             await transaction.rollback();
             return res.status(404).send('Service not found');
         }
 
-        await service.update(req.body, {transaction});
+        const updateData = {
+            ...req.body,
+            serviceImageUrl: req.files && req.files.serviceImage ? req.files.serviceImage[0].path : service.serviceImageUrl
+        };
 
-        if (req.files && req.files.length > 0) {
-            const files = req.files.map(file => ({
+        await service.update(updateData, { transaction });
+
+        if (req.files && req.files.otherFiles && req.files.otherFiles.length > 0) {
+            const files = req.files.otherFiles.map(file => ({
                 name: file.originalname,
                 path: file.path,
-                type: file.mimetype
+                type: file.mimetype,
+                serviceId: service.id
             }));
-            await File.bulkCreate(files, {transaction});
+            await File.bulkCreate(files, { transaction });
         }
 
         await transaction.commit();
@@ -92,6 +105,7 @@ async function updateService (req, res) {
         res.status(400).send(error);
     }
 }
+
 
 // Удаление услуги
 async function deleteService(req, res) {
