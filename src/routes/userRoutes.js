@@ -87,6 +87,40 @@
  *         description: Заказ не найден
  *       500:
  *         description: Ошибка сервера
+ * /api/users/{id}/average-rating/:
+ *   get:
+ *     summary: Получить средний рейтинг пользователя
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Успешный ответ
+ *       404:
+ *         description: Заказ не найден
+ *       500:
+ *         description: Ошибка сервера
+ * /api/users/average-ratings/:
+ *   get:
+ *     summary: Получить средний рейтинг всех пользователей
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Успешный ответ
+ *       404:
+ *         description: Заказ не найден
+ *       500:
+ *         description: Ошибка сервера
  */
 
 
@@ -95,12 +129,15 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const reviewController = require('../controllers/reviewController');
 const upload = require('../config/multer');
 
 router.get('/', userController.getAllUsers);
 router.get('/:id', userController.getUserById);
 router.put('/:id', upload.single('profilePhoto'), userController.updateUser);
-router.get('/users/lastOnline', userController.getAllUsersLastOnline);
-router.get('/users/:userId/lastOnline', userController.getLastOnline);
+router.get('/lastOnline', userController.getAllUsersLastOnline);
+router.get('/:userId/lastOnline', userController.getLastOnline);
+router.get('/:userId/average-rating', reviewController.getUserAverageRating);
+router.get('/average-ratings', reviewController.getAllUsersAverageRatings);
 
 module.exports = router;

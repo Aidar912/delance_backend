@@ -52,10 +52,66 @@ function deleteReview(req, res) {
         .catch(error => res.status(500).json({ message: error.message }));
 }
 
+async function getUserAverageRating (req, res) {
+    try {
+        const userId = req.params.userId;
+        const user = await User.findByPk(userId, {
+            include: [{
+                model: Review,
+                as: 'reviews',
+                attributes: [] // Не возвращаем атрибуты самих отзывов
+            }],
+            attributes: [
+                [sequelize.fn('AVG', sequelize.col('reviews.rating')), 'averageRating']
+            ],
+            group: ['User.id'] // Группировка необходима для корректного вычисления среднего значения
+        });
+
+        if (user) {
+            res.json({ userId: user.id, averageRating: user.dataValues.averageRating || 0 });
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error fetching user average rating:', error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+// Получение списка средних рейтингов всех пользователей
+async function getAllUsersAverageRatings (req, res) {
+    try {
+        const users = await User.findAll({
+            include: [{
+                model: Review,
+                as: 'reviews',
+                attributes: []
+            }],
+            attributes: [
+                'id',
+                [sequelize.fn('AVG', sequelize.col('reviews.rating')), 'averageRating']
+            ],
+            group: ['User.id']
+        });
+
+        const usersAverageRatings = users.map(user => ({
+            userId: user.id,
+            averageRating: user.dataValues.averageRating || 0
+        }));
+
+        res.json(usersAverageRatings);
+    } catch (error) {
+        console.error('Error fetching all users average ratings:', error);
+        res.status(500).send('Internal server error');
+    }
+}
+
 module.exports = {
     createReview,
     getAllReviews,
     getReviewById,
     updateReview,
-    deleteReview
+    deleteReview,
+    getAllUsersAverageRatings,
+    getUserAverageRating
 };
