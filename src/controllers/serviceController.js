@@ -58,7 +58,10 @@ async function getAllServices(req, res) {
 async function getServiceById(req, res) {
     try {
         const service = await Service.findByPk(req.params.id, {
-            include: [File]
+            include: [{
+                model:File,
+                as:'files'
+            }]
         });
         if (service) {
             res.status(200).send(service);

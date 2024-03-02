@@ -97,7 +97,10 @@ async function getAllOrders(req, res) {
 async function getOrderById(req, res) {
     try {
         const order = await Order.findByPk(req.params.id, {
-            include: [File]
+            include: [{
+                model:File,
+                as:'files'
+            }]
         });
         if (order) {
             res.status(200).send(order);
