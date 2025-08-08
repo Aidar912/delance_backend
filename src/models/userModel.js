@@ -7,6 +7,10 @@ const User = sequelize.define('User', {
         allowNull: false,
         unique: true
     },
+    profilePhotoUrl: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     firstName: {
         type: DataTypes.STRING,
         allowNull: true
@@ -22,9 +26,22 @@ const User = sequelize.define('User', {
         validate: {
             isEmail: true
         }
-    }
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+
+    },
+    description:{
+        type:DataTypes.TEXT,
+        allowNull:true
+    },
+    lastOnline: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: DataTypes.NOW
+    },
 }, {
-    // Other model options go here
 });
 
 module.exports = User;

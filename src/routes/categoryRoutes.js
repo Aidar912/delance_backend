@@ -1,30 +1,34 @@
 /**
  * @swagger
  * tags:
- *   name: Orders
- *   description: Операции с заказами(работает)
- * /api/orders:
+ *   name: Category
+ *   description: Операции с категориями
+ * /api/category:
  *   post:
- *     summary: Создать заказ
- *     description: title,description,price,status,client,executor,category,files(список), orderImage(фото)
- *     tags: [Orders]
+ *     summary: Создать категорию
+ *     tags: [Category]
+ *     description: name,description
  *     responses:
  *       200:
- *         description: Успешный ответ
+ *         description: Успешное создание категории
+ *
+ *       400:
+ *         description: Ошибка валидации или переданы некорректные данные
  *       500:
  *         description: Ошибка сервера
+ *
  *   get:
- *      summary: Получить все заказы
- *      tags: [Orders]
+ *      summary: Получить все категории
+ *      tags: [Category]
  *      responses:
  *        200:
  *          description: Успешный ответ
  *        500:
  *          description : Ошибка сервера
- * /api/orders/{id}:
+ * /api/category/{id}:
  *   get:
- *     summary: Получить заказ по ID
- *     tags: [Orders]
+ *     summary: Получить категорию по ID
+ *     tags: [Category]
  *     parameters:
  *       - in: path
  *         name: id
@@ -35,12 +39,12 @@
  *       200:
  *         description: Успешный ответ
  *       404:
- *         description: Заказ не найден
+ *         description: категориюя не найдена
  *       500:
  *         description: Ошибка сервера
  *   put:
- *     summary: Обновить заказ
- *     tags: [Orders]
+ *     summary: Обновить категорию
+ *     tags: [Category]
  *     parameters:
  *       - in: path
  *         name: id
@@ -57,8 +61,8 @@
  *       500:
  *         description: Ошибка сервера
  *   delete:
- *     summary: Удалить заказ
- *     tags: [Orders]
+ *     summary: Удалить категорию
+ *     tags: [Category]
  *     parameters:
  *       - in: path
  *         name: id
@@ -77,22 +81,14 @@
 
  */
 
-
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/ordersController');
-const upload = require('../config/multer');
+const categoryController = require('../controllers/categoryController');
 
-// Routes
-router.post('/',
-    upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'files', maxCount: 10 }]),
-    orderController.createOrder
-);
-router.get('/', orderController.getAllOrders);
-router.get('/:id', orderController.getOrderById);
-
-router.put('/:id', upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'otherFiles' }]), orderController.updateOrder);
-
-router.delete('/:id', orderController.deleteOrder);
+router.post('/', categoryController.createCategory);
+router.get('/', categoryController.getAllCategories);
+router.get('/:id', categoryController.getCategoryById);
+router.put('/:id', categoryController.updateCategory);
+router.delete('/:id', categoryController.deleteCategory);
 
 module.exports = router;

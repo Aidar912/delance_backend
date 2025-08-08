@@ -1,13 +1,23 @@
 const express = require('express');
+const http = require("http");
+const socketIo = require('socket.io');
+const WebSocket = require('ws');
 const sequelize = require('./src/db/db');
 const routes = require('./src/routes/index');
 const cors = require('cors');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-
+const bodyParser = require('body-parser');
+const configureSocket = require("./src/ws/websocketServer");
 
 const app = express();
+const server = http.createServer(app);
+configureSocket(server);
+
+
+
 const PORT = process.env.PORT || 3000;
+const IP_ADDRESS = '127.0.0.1';
 sequelize.authenticate()
     .then(() => {
         return sequelize.sync();
@@ -24,6 +34,7 @@ const corsOptions = {
     optionsSuccessStatus: 200
 };
 
+
 const options = {
     swaggerDefinition: {
         info: {
@@ -36,13 +47,21 @@ const options = {
 };
 const specs = swaggerJsdoc(options);
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
+app.use('/uploads', express.static('uploads'));
 app.use(cors(corsOptions));
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
+
 routes(app)
 
-app.listen(PORT, () => {
+server.listen(PORT, IP_ADDRESS,() => {
     console.log(`Server running on port ${PORT}`);
 });

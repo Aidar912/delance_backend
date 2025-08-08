@@ -1,30 +1,34 @@
 /**
  * @swagger
  * tags:
- *   name: Orders
- *   description: Операции с заказами(работает)
- * /api/orders:
+ *   name: Service
+ *   description: Операции с услугами
+ * /api/services:
  *   post:
- *     summary: Создать заказ
- *     description: title,description,price,status,client,executor,category,files(список), orderImage(фото)
- *     tags: [Orders]
+ *     summary: Создать услугу
+ *     tags: [Service]
+ *     description: title , description , minprice(от ),maxprice(до),duration,status,seller(id),category(id),files(список файлов),serviceImage(фото)
  *     responses:
  *       200:
- *         description: Успешный ответ
+ *         description: Успешное создание услуги
+ *
+ *       400:
+ *         description: Ошибка валидации или переданы некорректные данные
  *       500:
  *         description: Ошибка сервера
+ *
  *   get:
- *      summary: Получить все заказы
- *      tags: [Orders]
+ *      summary: Получить все услуги
+ *      tags: [Service]
  *      responses:
  *        200:
  *          description: Успешный ответ
  *        500:
  *          description : Ошибка сервера
- * /api/orders/{id}:
+ * /api/services/{id}:
  *   get:
- *     summary: Получить заказ по ID
- *     tags: [Orders]
+ *     summary: Получить услугу по ID
+ *     tags: [Service]
  *     parameters:
  *       - in: path
  *         name: id
@@ -39,8 +43,8 @@
  *       500:
  *         description: Ошибка сервера
  *   put:
- *     summary: Обновить заказ
- *     tags: [Orders]
+ *     summary: Обновить услугу
+ *     tags: [Service]
  *     parameters:
  *       - in: path
  *         name: id
@@ -57,8 +61,8 @@
  *       500:
  *         description: Ошибка сервера
  *   delete:
- *     summary: Удалить заказ
- *     tags: [Orders]
+ *     summary: Удалить услугу
+ *     tags: [Service]
  *     parameters:
  *       - in: path
  *         name: id
@@ -78,21 +82,16 @@
  */
 
 
+
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/ordersController');
+const serviceController = require('../controllers/serviceController');
 const upload = require('../config/multer');
 
-// Routes
-router.post('/',
-    upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'files', maxCount: 10 }]),
-    orderController.createOrder
-);
-router.get('/', orderController.getAllOrders);
-router.get('/:id', orderController.getOrderById);
-
-router.put('/:id', upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'otherFiles' }]), orderController.updateOrder);
-
-router.delete('/:id', orderController.deleteOrder);
+router.put('/:id', upload.fields([{ name: 'serviceImage', maxCount: 1 }, { name: 'otherFiles' }]), serviceController.updateService);
+router.get('/', serviceController.getAllServices);
+router.get('/:id', serviceController.getServiceById);
+router.post('/', upload.fields([{ name: 'serviceImage', maxCount: 1 }, { name: 'otherFiles' }]), serviceController.createService);
+router.delete('/:id', serviceController.deleteService);
 
 module.exports = router;

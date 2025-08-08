@@ -1,30 +1,30 @@
 /**
  * @swagger
  * tags:
- *   name: Orders
- *   description: Операции с заказами(работает)
- * /api/orders:
+ *   name: Purchase
+ *   description: Операции с предложениями(работает)
+ * /api/purchase:
  *   post:
- *     summary: Создать заказ
- *     description: title,description,price,status,client,executor,category,files(список), orderImage(фото)
- *     tags: [Orders]
+ *     summary: Создать покупку
+ *     tags: [Purchase]
+ *     description: purchaseDate,status,totalPrice,buyers
  *     responses:
  *       200:
  *         description: Успешный ответ
  *       500:
  *         description: Ошибка сервера
  *   get:
- *      summary: Получить все заказы
- *      tags: [Orders]
+ *      summary: Получить все покупки
+ *      tags: [Purchase]
  *      responses:
  *        200:
  *          description: Успешный ответ
  *        500:
  *          description : Ошибка сервера
- * /api/orders/{id}:
+ * /api/purchase/{id}:
  *   get:
- *     summary: Получить заказ по ID
- *     tags: [Orders]
+ *     summary: Получить покупку по ID
+ *     tags: [Purchase]
  *     parameters:
  *       - in: path
  *         name: id
@@ -39,8 +39,8 @@
  *       500:
  *         description: Ошибка сервера
  *   put:
- *     summary: Обновить заказ
- *     tags: [Orders]
+ *     summary: Обновить покупку
+ *     tags: [Purchase]
  *     parameters:
  *       - in: path
  *         name: id
@@ -53,12 +53,12 @@
  *       400:
  *         description: Неверный запрос
  *       404:
- *         description: Заказ не найден
+ *         description: Предложение не найдено
  *       500:
  *         description: Ошибка сервера
  *   delete:
- *     summary: Удалить заказ
- *     tags: [Orders]
+ *     summary: Удалить покупку
+ *     tags: [Purchase]
  *     parameters:
  *       - in: path
  *         name: id
@@ -71,28 +71,24 @@
  *       400:
  *         description: Неверный запрос
  *       404:
- *         description: Заказ не найден
+ *         description: Предложение не найдено
  *       500:
  *         description: Ошибка сервера
 
  */
 
 
+
+
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/ordersController');
-const upload = require('../config/multer');
+const purchaseController = require('../controllers/purchaseController');
 
-// Routes
-router.post('/',
-    upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'files', maxCount: 10 }]),
-    orderController.createOrder
-);
-router.get('/', orderController.getAllOrders);
-router.get('/:id', orderController.getOrderById);
-
-router.put('/:id', upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'otherFiles' }]), orderController.updateOrder);
-
-router.delete('/:id', orderController.deleteOrder);
+// Маршруты для покупок
+router.post('/', purchaseController.createPurchase);
+router.get('/', purchaseController.getAllPurchases);
+router.get('/:id', purchaseController.getPurchaseById);
+router.put('/:id', purchaseController.updatePurchase);
+router.delete('/:id', purchaseController.deletePurchase);
 
 module.exports = router;

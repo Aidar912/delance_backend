@@ -1,30 +1,30 @@
 /**
  * @swagger
  * tags:
- *   name: Orders
- *   description: Операции с заказами(работает)
- * /api/orders:
+ *   name: Review
+ *   description: Операции с отзывами
+ * /api/review:
  *   post:
- *     summary: Создать заказ
- *     description: title,description,price,status,client,executor,category,files(список), orderImage(фото)
- *     tags: [Orders]
+ *     summary: Создать отзыв
+ *     description: title,description,rating,user
+ *     tags: [Review]
  *     responses:
  *       200:
  *         description: Успешный ответ
  *       500:
  *         description: Ошибка сервера
  *   get:
- *      summary: Получить все заказы
- *      tags: [Orders]
+ *      summary: Получить все отзывы
+ *      tags: [Review]
  *      responses:
  *        200:
  *          description: Успешный ответ
  *        500:
  *          description : Ошибка сервера
- * /api/orders/{id}:
+ * /api/review/{id}:
  *   get:
- *     summary: Получить заказ по ID
- *     tags: [Orders]
+ *     summary: Получить отзыв по ID
+ *     tags: [Review]
  *     parameters:
  *       - in: path
  *         name: id
@@ -39,8 +39,8 @@
  *       500:
  *         description: Ошибка сервера
  *   put:
- *     summary: Обновить заказ
- *     tags: [Orders]
+ *     summary: Обновить отзыв
+ *     tags: [Review]
  *     parameters:
  *       - in: path
  *         name: id
@@ -57,8 +57,8 @@
  *       500:
  *         description: Ошибка сервера
  *   delete:
- *     summary: Удалить заказ
- *     tags: [Orders]
+ *     summary: Удалить отзыв
+ *     tags: [Review]
  *     parameters:
  *       - in: path
  *         name: id
@@ -78,21 +78,17 @@
  */
 
 
+
+
+
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/ordersController');
-const upload = require('../config/multer');
+const reviewController= require('../controllers/reviewController');
 
-// Routes
-router.post('/',
-    upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'files', maxCount: 10 }]),
-    orderController.createOrder
-);
-router.get('/', orderController.getAllOrders);
-router.get('/:id', orderController.getOrderById);
-
-router.put('/:id', upload.fields([{ name: 'orderImage', maxCount: 1 }, { name: 'otherFiles' }]), orderController.updateOrder);
-
-router.delete('/:id', orderController.deleteOrder);
+router.post('/', reviewController.createReview);
+router.get('/', reviewController.getAllReviews);
+router.get('/:id', reviewController.getReviewById);
+router.put('/:id', reviewController.updateReview);
+router.delete('/:id', reviewController.deleteReview);
 
 module.exports = router;

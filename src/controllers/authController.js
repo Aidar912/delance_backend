@@ -9,14 +9,23 @@ exports.verifySignature = async (req, res) => {
         if (!isVerified) {
             return res.status(401).json({ message: 'Verification failed' });
         }
-        let user = await User.findOne({ address });
+        let user = await User.findOne({
+            where: {
+                address: address
+            }
+        });
         if (!user) {
-            user = new User({ address });
+            user = await User.create({ address, lastOnline: new Date() });
+            await user.save();
+        } else {
+            user.lastOnline = new Date();
             await user.save();
         }
-        res.json({ userData: 'User verified', user });
+
+        res.json({ "verify": true});
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: 'Server error', error });
     }
 };
+

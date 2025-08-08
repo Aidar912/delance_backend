@@ -1,0 +1,19 @@
+[0;1;32m●[0m node@delance_backend.service - NodeJS Service
+     Loaded: loaded (/etc/systemd/system/node@.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Sat 2024-03-02 01:52:24 UTC; 2min 13s ago
+   Main PID: 8740 (node)
+      Tasks: 11 (limit: 9516)
+     Memory: 35.8M
+     CGroup: /system.slice/system-node.slice/node@delance_backend.service
+             └─8740 /home/alt43studio/.nvm/versions/node/v21.6.2/bin/node /home/alt43studio/delance_backend/app.js
+
+Mar 02 01:52:25 DeLance node[8740]:     schema: undefined,
+Mar 02 01:52:25 DeLance node[8740]:     table: undefined,
+Mar 02 01:52:25 DeLance node[8740]:     column: undefined,
+Mar 02 01:52:25 DeLance node[8740]:     dataType: undefined,
+Mar 02 01:52:25 DeLance node[8740]:     constraint: undefined,
+Mar 02 01:52:25 DeLance node[8740]:     file: 'auth.c',
+Mar 02 01:52:25 DeLance node[8740]:     line: '330',
+Mar 02 01:52:25 DeLance node[8740]:     routine: 'auth_failed'
+Mar 02 01:52:25 DeLance node[8740]:   }
+Mar 02 01:52:25 DeLance node[8740]: }
